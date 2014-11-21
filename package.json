@@ -1,0 +1,24 @@
+{
+  "name": "xml_parser",
+  "version": "1.0.0",
+  "description": "parse xml",
+  "main": "xml_parser.js",
+  "scripts": {
+    "test": "nodeunit test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qquach/xml-parser.git"
+  },
+  "keywords": [
+    "dom",
+    "xml",
+    "parser"
+  ],
+  "author": "Quoc Quach",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qquach/xml-parser/issues"
+  },
+  "homepage": "https://github.com/qquach/xml-parser"
+}

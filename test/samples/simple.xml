@@ -1,0 +1,12 @@
+<root>
+  <name a="A" b="B B" type="string">test</name>
+  <age type="integer">12</age>
+  <empty type="text" value="something"/>
+  <items>
+    test text
+    <!-- text something <some> tag </some> -->
+    <item a="A" b="B b b" type="float">1</item>
+    <item type="float">2</item>
+    <item type="float">3</item>
+  </items>
+</root>
