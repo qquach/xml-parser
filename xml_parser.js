@@ -81,22 +81,38 @@ XmlParser.prototype = {
    * need to return the obj, since obj may converted from object to array which point to different address
    */
   addXmlElement: function(obj, xml, attr, content, tagName) {
-    var val = (content.indexOf("<") == -1) ? getValue(content, attr, this.options) : this.parse(content);
-    if (obj[tagName]) {
-      var v = obj[tagName];
-      var tmp = {};
-      tmp[tagName] = v;
-      obj = [ tmp ];
-    }
-    if (util.isArray(obj)) {
-      var tmp = {};
-      tmp[tagName] = val;
-      obj.push(tmp);
-    } else {
-      obj[tagName] = val;
+    var isLeafNode = content.indexOf("<") == -1;
+    if(isLeafNode){
+      var val = getValue(content, attr, this.options);
+      //check if property already added, then convert it to array.
+      if (obj[tagName] && !util.isArray(obj[tagName])) {
+        var v = obj[tagName];
+        obj[tagName] = [v];
+      }
+      if (util.isArray(obj[tagName])) {
+        obj[tagName].push(val);
+      } else {
+        obj[tagName] = val;
+      }
+    }else{
+      var val = this.parse(content);
+      if (obj[tagName]) {
+        var v = obj[tagName];
+        var tmp = {};
+        tmp[tagName] = v;
+        obj = [tmp];
+      }
+      if (util.isArray(obj)) {
+        var tmp = {};
+        tmp[tagName] = val;
+        obj.push(tmp);
+      } else {
+        obj[tagName] = val;
+      }
     }
     return obj;
   },
+
   addHtmlElement: function(obj, xml, attr, content, tagName) {
     if (util.isArray(obj)) {
       if (tagName == "#text") {

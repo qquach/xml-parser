@@ -1,0 +1,59 @@
+<root>
+  <name>test</name>
+  <age>12</age>
+  <empty type="text" value="something"/>
+  <!-- multiple layer -->
+  <mutil>
+    <a>
+      <b>
+        <c>something</c>
+      </b>
+    </a>
+  </mutil>
+  <!-- items [1, 2.2, 0.32] -->
+  <items>
+    <item>1</item>
+    <item>2.2</item>
+    <item>0.32</item>
+  </items>
+  <!-- strings ["aa", "bb", "cc"] -->
+  <strings>
+    <s>aa</s>
+    <s>bb</s>
+    <s>cc</s>
+  </strings>
+  <!-- boolean [true, false] -->
+  <boolean>
+    <b>true</b>
+    <b>false</b>
+  </boolean>
+  <!-- mix [{m:1},{m:2},{m:[1,2]}] -->
+  <mix>
+    <m>1</m>
+    <m>asdf</m>
+    <m>
+      <n>1</n>
+      <n>2</n>
+    </m>
+  </mix>
+  <!-- arrays [{array:[1,2,3]},{array:[1,2,3]}] -->
+  <arrays>
+    <array>
+      <a>1</a>
+      <a>2</a>
+      <a>3</a>
+    </array>
+    <array>
+      <a>1</a>
+      <b>2</b>
+      <c>3</c>
+    </array>
+  </arrays>
+  <!-- objects: {obj:[a,b,c], other:c} -->
+  <objects>
+    <obj>a</obj>
+    <obj>b</obj>
+    <other>c</other>
+    <obj>c</obj>
+  </objects>
+</root>
