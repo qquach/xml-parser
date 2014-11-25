@@ -19,5 +19,11 @@ module.exports = {
       var dom = xmlParser(xmlStr);
       console.log(JSON.stringify(dom));
       test.done();
+    },
+    encoding: function(test){
+      var xmlStr = fs.readFileSync("./test/samples/encoding.xml",{encoding:"utf8"});
+      var dom = xmlParser(xmlStr);
+      console.log(JSON.stringify(dom));
+      test.done();
     }
 };

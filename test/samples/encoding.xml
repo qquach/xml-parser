@@ -1,0 +1,9 @@
+<root>
+  <name>no encoding</name>
+  <urlencoded>test%20something%20here%20and%20there</urlencoded>
+  <xmlencoded>test &lt; something &gt;</xmlencoded>
+  <cdata>
+    <![CDATA[plain text <here> and <there> should not
+  be escaped]]>
+  </cdata>
+</root>

@@ -69,51 +69,54 @@ XmlParser.prototype = {
       }
     }
     if (this.options.xml) {
-      obj = this.addXmlElement(obj, xml, attr, content, tagName);
+      obj = this.addXmlElement(obj, attr, content, tagName);
     } else if (this.options.html) {
       //dom parser every tag = object.
       //supported properties: nodeName, textNode, innerHTML, childNodes, attributes
-      this.addHtmlElement(obj, xml, attr, content, tagName);
+      this.addHtmlElement(obj, attr, content, tagName);
     }
     return this.parse(xml, obj);
   },
   /**
    * need to return the obj, since obj may converted from object to array which point to different address
    */
-  addXmlElement: function(obj, xml, attr, content, tagName) {
-    var isLeafNode = content.indexOf("<") == -1;
-    if(isLeafNode){
+  addXmlElement: function(obj, attr, content, tagName) {
+    //handle CDATA
+    console.log("addExmlElement tag: %s, content: %s", tagName, content);
+    var m = content.match(/^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/);
+    if(m){
+      console.log("cdata matched");
+      console.log(m);
+      addXmlContent(obj,tagName,m[1]);
+      return obj;
+    }
+
+    //handle leaf node
+    if(content.indexOf("<") == -1){
       var val = getValue(content, attr, this.options);
-      //check if property already added, then convert it to array.
-      if (obj[tagName] && !util.isArray(obj[tagName])) {
-        var v = obj[tagName];
-        obj[tagName] = [v];
-      }
-      if (util.isArray(obj[tagName])) {
-        obj[tagName].push(val);
-      } else {
-        obj[tagName] = val;
-      }
-    }else{
-      var val = this.parse(content);
-      if (obj[tagName]) {
-        var v = obj[tagName];
-        var tmp = {};
-        tmp[tagName] = v;
-        obj = [tmp];
-      }
-      if (util.isArray(obj)) {
-        var tmp = {};
-        tmp[tagName] = val;
-        obj.push(tmp);
-      } else {
-        obj[tagName] = val;
-      }
+      addXmlContent(obj,tagName,val);
+      return obj;
+    }
+
+    //handle for child node
+    var val = this.parse(content);
+    if (obj[tagName]) {
+      var v = obj[tagName];
+      var tmp = {};
+      tmp[tagName] = v;
+      obj = [tmp];
+    }
+    if (util.isArray(obj)) {
+      var tmp = {};
+      tmp[tagName] = val;
+      obj.push(tmp);
+    } else {
+      obj[tagName] = val;
     }
     return obj;
   },
 
-  addHtmlElement: function(obj, xml, attr, content, tagName) {
+  addHtmlElement: function(obj, attr, content, tagName) {
     if (util.isArray(obj)) {
       if (tagName == "#text") {
         //console.log(util.format("this.commentCollection: %j", this.commentCollection));
@@ -142,6 +145,18 @@ XmlParser.prototype = {
 };
 
 //================= share private function for all object ======================
+function addXmlContent(obj,tagName,val){
+  //check if property already added, then convert it to array.
+    if (obj[tagName] && !util.isArray(obj[tagName])) {
+      var v = obj[tagName];
+      obj[tagName] = [v];
+    }
+    if (util.isArray(obj[tagName])) {
+      obj[tagName].push(val);
+    } else {
+      obj[tagName] = val;
+    }
+  }
 /**
  * xml: remove comment block
  * html: replace comment with a unique string which will be process later
@@ -227,6 +242,8 @@ function getAttr(str) {
  * @returns
  */
 function getValue(content, attr, options) {
+  content = decodeXml(content);
+  content = decodeURIComponent(content);
   if (!options.wsdl)
     return content;
   if (!attr)
@@ -243,6 +260,21 @@ function getValue(content, attr, options) {
   }
 }
 
+function encodeXml(str) {
+  return str.replace(/&/g, '&amp;')
+             .replace(/</g, '&lt;')
+             .replace(/>/g, '&gt;')
+             .replace(/"/g, '&quot;')
+             .replace(/'/g, '&apos;');
+}
+
+function decodeXml(str) {
+  return str.replace(/&apos;/g, "'")
+             .replace(/&quot;/g, '"')
+             .replace(/&gt;/g, '>')
+             .replace(/&lt;/g, '<')
+             .replace(/&amp;/g, '&');
+}
 ///=========== Expose node module function===================
 var parser = function(xml,options){
   return new XmlParser(options).parse(xml);
