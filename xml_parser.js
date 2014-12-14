@@ -82,7 +82,7 @@ XmlParser.prototype = {
    */
   addXmlElement: function(obj, attr, content, tagName) {
     //handle CDATA
-    console.log("addExmlElement tag: %s, content: %s", tagName, content);
+    //console.log("addExmlElement tag: %s, content: %s", tagName, content);
     var m = content.match(/^\s*<!\[CDATA\[([\s\S]*?)\]\]>\s*$/);
     if(m){
       console.log("cdata matched");

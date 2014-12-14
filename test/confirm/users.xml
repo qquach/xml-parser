@@ -1,0 +1,10 @@
+<users>
+        <array>
+                <name>some name</name>
+                <age>20</age>
+        </array>
+        <array>
+                <name>other name</name>
+                <age>10</age>
+        </array>
+</users>

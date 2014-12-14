@@ -1,40 +1,45 @@
 /**
  * New node file
  */
-module.exports1 = {
- test1: function(test){
-   console.log("test1");
-   test.expect(2);
-   test.ok(true,"ok");
-   test.ok(!false,"it's not ok");
+var xmlParser = require("../xml_parser.js"),
+  fs = require("fs");
+module.exports = {
+ simple: function(test){
+   var xmlStr = fs.readFileSync("./test/confirm/simple.xml",{encoding:"utf8"});
+   var dom = xmlParser(xmlStr);
+   console.log(JSON.stringify(dom));
+   var check = {
+       user:{
+         name:"some name",
+         age:20
+       }
+     };
+   test.deepEqual(dom,check);
    test.done();
  },
- setUp:function(callback){
-   console.log("setup");
-   callback();
+ users: function(test){
+   var xmlStr = fs.readFileSync("./test/confirm/users.xml",{encoding:"utf8"});
+   var dom = xmlParser(xmlStr);
+   var check = {
+       users:[
+              {array:{
+                name:"some name",
+                age: 20
+              }},
+              {array:{
+                name:"other name",
+                age: 10
+              }}
+             ]
+          };
+   test.deepEqual(dom,check);
+   test.done();
  },
- tearDown: function(callback){
-   console.log("tearDown");
-   callback();
- },
- group1: {
-   test2: function(test){
-     console.log("test2");
-     test.expect(1);
-     test.equal("a","A".toLowerCase(),"Sure equal");
-     test.done();
-   },
-   test3: function(test){
-     test.expect(1);
-     test.notEqual(1,1.1,"not equal");
-     test.done();
-   },
-   test4: function(test){
-     test.throws(function(){
-       console.log("test throw exception");
-       throw "get it";
-     },"get it","message get there");
-     test.done();
-   }
+ string: function(test){
+   var xmlStr = fs.readFileSync("./test/confirm/string.xml",{encoding:"utf8"});
+   var dom = xmlParser(xmlStr);
+   var check = {string: {array: ["test","something","here"]}};
+   test.deepEqual(dom,check);
+   test.done();
  }
 };

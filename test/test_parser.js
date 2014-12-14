@@ -5,13 +5,22 @@ module.exports = {
     simpleXML: function(test){
       var xmlStr = fs.readFileSync("./test/samples/simple.xml",{encoding:"utf8"});
       var dom = xmlParser(xmlStr);
-      console.log(JSON.stringify(dom));
+      var check = { root: {
+            name:"test",
+            age: '12',
+            empty: "",
+            items:{
+              item:['1','2','3']
+            }
+          }
+        };
+      test.deepEqual(dom,check);
       test.done();
     },
     simpleHTML: function(test){
       var xmlStr = fs.readFileSync("./test/samples/simple.xml",{encoding:"utf8"});
       var dom = xmlParser(xmlStr,{html:true});
-      console.log(dom);
+      //console.log(dom);
       test.done();
     },
     autoMerge: function(test){
