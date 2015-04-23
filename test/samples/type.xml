@@ -1,0 +1,12 @@
+<root>
+  <name>string</name>
+  <age type="integer">0</age>
+  <toys type="array">string</toys>
+  <other>
+    <arr>1</arr>
+    <arr>2</arr>
+  </other>
+  <arrayObject type="array">
+    <test type="number">1</test>
+  </arrayObject>
+</root>

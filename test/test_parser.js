@@ -34,5 +34,11 @@ module.exports = {
       var dom = xmlParser(xmlStr);
       console.log(JSON.stringify(dom));
       test.done();
+    },
+    type: function(test){
+      var xmlStr = fs.readFileSync("./test/samples/type.xml",{encoding:"utf8"});
+      var dom = xmlParser(xmlStr,{swagger: true, excludeRoot:true});
+      console.log(JSON.stringify(dom));
+      test.done();
     }
 };

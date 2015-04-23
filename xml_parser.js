@@ -1,4 +1,5 @@
-var util = require("util");
+var util = require("util"),
+    extend = require("extend");
 
 /**
  * special tag handling for html dom parser
@@ -13,17 +14,15 @@ var commentRegex = /<!--([\s\S]*?)-->/g;
 /**
  * create the xml parser class to issolate the option for each parsing
  */
+var defaultOptions = {
+    html:false,
+    wsdl: false,
+    xml: true,
+    swagger: false,
+    excludeRoot: false
+}
 var XmlParser = function(options){
-  if(options && options.html===true){
-    this.options = {html:true, wsdl: false, xml: false};
-  }
-  else if (options && option.wsdl === true){
-    this.options = {html:false, wsdl: true, xml: true};
-  }
-  else{
-    this.options = {html:false, wsdl: false, xml: true};
-  }
-
+  this.options = extend({},defaultOptions,options);
   this.commentCollection = {};
 };
 XmlParser.prototype = {
@@ -110,7 +109,11 @@ XmlParser.prototype = {
       var tmp = {};
       tmp[tagName] = val;
       obj.push(tmp);
-    } else {
+    }
+    else if(attr && attr.type=="array"){
+      obj[tagName] = [val];
+    }
+    else {
       obj[tagName] = val;
     }
     return obj;
@@ -244,17 +247,26 @@ function getAttr(str) {
 function getValue(content, attr, options) {
   content = decodeXml(content);
   content = decodeURIComponent(content);
-  if (!options.wsdl)
+  if (!options.wsdl && !options.swagger){
+    console.log("no parsing value")
     return content;
-  if (!attr)
+  }
+
+  if (!attr){
+    console.log("attr not defined");
     return content;
+  }
+
   switch (attr.type) {
   case "integer":
     return parseInt(content);
   case "float":
+  case "number":
     return parseFloat(content);
   case "boolean":
     return content.toLowerCase() == "true";
+  case "array":
+    return [content];
   default:
     return content;
   }
@@ -277,6 +289,13 @@ function decodeXml(str) {
 }
 ///=========== Expose node module function===================
 var parser = function(xml,options){
-  return new XmlParser(options).parse(xml);
+  var xmlParser = new XmlParser(options);
+  var dom = xmlParser.parse(xml);
+  if(!xmlParser.options.excludeRoot){
+    return dom;
+  }
+  for(var i in dom){
+    return dom[i];
+  }
 };
 module.exports = parser;
